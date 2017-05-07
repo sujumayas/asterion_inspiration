@@ -1,0 +1,13 @@
+/* Its online experiment - apsolut */
+
+canvas {
+  display: block;
+   -moz-opacity:0.2; /* For older FF versions */
+   -khtml-opacity:0.2;
+   opacity:0.2;
+   filter:alpha(opacity=20);
+}
+
+body {
+ background:#000 url('https://s22.postimg.org/rwc2acgj5/image.jpg');
+}

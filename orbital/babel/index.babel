@@ -1,0 +1,141 @@
+setTimeout(() => {
+  const canvasEl = document.getElementById('js-canvas');
+  const {width, height} = canvasEl;
+  const canvasCtx = canvasEl.getContext('2d');
+  const planet = new Planet(width / 2, height / 2, 15);
+  const ship = new Ship(width / 2 - 40, height / 2, 16, 0);
+  ship.vY = -3;
+  const tailEl = document.createElement('canvas');
+  tailEl.width = width;
+  tailEl.height = height;
+  const offEl = document.createElement('canvas');
+  offEl.width = width;
+  offEl.height = height;
+  animate(0, canvasCtx, width, height, planet, ship, tailEl, offEl);
+}, 0);
+
+function animate (iteration, ctx, width, height, planet, ship, tailEl, offEl) {
+  ctx.clearRect(0, 0, width, height);
+  const offCtx = offEl.getContext('2d');
+  offCtx.clearRect(0, 0, width, height);
+  offCtx.drawImage(tailEl, 0, 0, width, height, 0, 0, width, height);
+  const tailCtx = tailEl.getContext('2d');
+  tailCtx.clearRect(0, 0, width, height);
+  tailCtx.globalAlpha = 0.92;
+  tailCtx.drawImage(offEl, 0, 0, width, height, 0, 0, width, height);
+  tailCtx.globalAlpha = 1;
+  if (iteration % (60 / 12) === 0) {
+    tailCtx.fillStyle = 'orange';
+    const trailSize = 6;
+    tailCtx.fillRect(ship.x - trailSize / 2, ship.y - trailSize / 2, trailSize, trailSize);
+  }
+  ctx.drawImage(tailEl, 0, 0, width, height, 0, 0, width, height);
+  planet.render(ctx);
+  ship.update([planet]);
+  ship.render(ctx);
+  requestAnimationFrame(() => {
+    animate(iteration + 1, ctx, width, height, planet, ship, tailEl, offEl);
+  });
+}
+
+function applyForces (target, neighbors) {
+  let acceleration = [target.vX, target.vY];
+  vec2.add(acceleration, acceleration, forces.gravitation(target, neighbors, 100));
+  [target.vX, target.vY] = vec2.add([], [target.vX, target.vY], acceleration);
+}
+
+const forces = {
+  gravitation: (target, neighbors, influenceRange) => {
+    const gravityForce = 0.1;
+    let vectorSum = [0, 0];
+    let steeringVector = [0, 0];
+    let count = 0;
+    neighbors.forEach(neighbor => {
+      const distance = vec2.dist([target.x, target.y], [neighbor.x, neighbor.y]);
+      if (distance > influenceRange) {
+        return;
+      }
+      vec2.add(vectorSum, vectorSum, [neighbor.x, neighbor.y]);
+      count++;
+    });
+    if (count) {
+      const baryCenter = vec2.div([], vectorSum, [count, count]);
+      let desired = vec2.sub([], baryCenter, [target.x, target.y]);
+      vec2.normalize(desired, desired);
+      vec2.mul(desired, desired, [gravityForce, gravityForce]);
+      vec2.sub(steeringVector, desired, [target.vX, target.vY]);
+    }
+    return steeringVector;
+  }
+};
+
+class Entity {
+  constructor (x, y, size, rotation) {
+    this.x = x;
+    this.y = y;
+    this.vX = 0;
+    this.vY = 0;
+    this.rotation = rotation;
+    this.size = size;
+    this.canvasSize = this.size * 2;
+    this.cacheEl = document.createElement('canvas');
+    this.cacheEl.width = this.canvasSize;
+    this.cacheEl.height = this.canvasSize;
+  }
+
+  render (ctx) {
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.rotation);
+    ctx.drawImage(this.cacheEl, 0, 0, this.canvasSize, this.canvasSize, -this.canvasSize / 2, -this.canvasSize / 2, this.canvasSize, this.canvasSize);
+    ctx.rotate(-this.rotation);
+    ctx.translate(-this.x, -this.y);
+  }
+
+  update (neighbors) {
+    applyForces(this, neighbors);
+    [this.x, this.y] = vec2.add([], [this.x, this.y], [this.vX, this.vY]);
+    this.rotation = Math.atan2(this.vY, this.vX) + Math.PI / 2;
+  }
+}
+
+class Planet extends Entity {
+  constructor (x, y, radius) {
+    super(x, y, radius * 2, 0);
+    this.radius = radius;
+    this.cache();
+  }
+
+  cache () {
+    const ctx = this.cacheEl.getContext('2d');
+    const center = this.canvasSize / 2;
+    ctx.beginPath();
+    ctx.fillStyle = '#dedede';
+    ctx.arc(center, center, this.radius, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.closePath();
+  }
+}
+
+class Ship extends Entity {
+  constructor (x, y, size, rotation) {
+    super(x, y, size, rotation);
+    this.cache();
+  }
+
+  cache () {
+    const ctx = this.cacheEl.getContext('2d');
+    const offset = this.canvasSize / 4;
+    ctx.beginPath(); // this is from http://codepen.io/jscottsmith/pen/KrJvAq
+    ctx.strokeStyle = '#dedede';
+    ctx.fillStyle = '#333';
+    ctx.lineWidth = this.size / 6;
+    ctx.translate(this.canvasSize / 2, this.canvasSize / 2);
+    ctx.moveTo(this.size / 2 - offset, -offset * 1.7);
+    ctx.lineTo(this.size - offset, this.size - offset);
+    ctx.lineTo(0 - offset, this.size - offset);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.translate(-this.canvasSize / 2, -this.canvasSize / 2);
+  }
+}
