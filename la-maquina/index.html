@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>La Máquina</title>
+	<link rel="stylesheet" href="">
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script src="https://unpkg.com/vue"></script>
+
+</head>
+<body>
+	<div id="app">
+		<template v-if="images.length > 0">
+			<div class="img-wrapper" v-for="image, index in images">
+				<img :src="image" @click="resize" :alt="'image-'+index">	
+			</div>
+		</template>
+		<div class="modal-overlay" v-show="openModal">
+			<div class="modal">
+				<img :src="modalSrc" alt="">
+				<button class="close-modal" @click="openModal = false;">X</button>
+			</div>
+		</div>
+	</div>
+	<script>
+		var app = new Vue({
+		  	el: '#app',
+		  	data: {
+		    	imagesLength: 1011,
+		    	openModal: false,
+		    	modalSrc: "",
+		  	},
+		  	computed:{
+		  		images: function(){
+		  			return this.getAllImages(this.imagesLength);
+		  		},
+		  	},
+		  	mounted: function(){
+		  	},
+		  	methods: {
+		  		getAllImages: function(val){
+		  			let result = [];
+		  			for (var i = val - 1; i >= 0; i--) {
+		  				result.push(`http://artecontemporaneo.pe/images/wordile (${i}).jpg`);
+		  			}
+		  			return result;
+		  		},
+		  		resize:function(e){
+		  			this.openModal = true;
+		  			this.modalSrc = e.target.currentSrc;
+		  		},
+		  	},
+		});
+	</script>
+	<style>
+		html, 
+		body{
+			margin:0;
+			padding:0;
+		}
+		.img-wrapper{
+			max-width:10%;
+			height: auto;
+			float:left;
+		}
+		img{
+			width:100%;
+			height: auto;
+		}
+		.modal-overlay{
+			position: absolute;
+			top:0;
+			left:0;
+			width:100%;
+			height:100vh;
+			background-color:rgba(20,20,20,0.8);
+		}
+		.modal{
+			position:absolute;
+			top:50%;
+			left:50%;
+			transform: translate(-50%, -50%);
+			width:600px;
+			height: 600px;
+			background-color: #e9e9e9;
+		}
+		.modal img{
+			width: 480px;
+		    margin: 60px auto;
+		    display: block;
+		}
+		.close-modal{
+			position: absolute;
+		    top: 0px;
+		    right: 10px;
+		    width: 35px;
+		    height: 35px;
+		    /* border-radius: 100%; */
+		    border-bottom-left-radius: 8px;
+		    border-bottom-right-radius: 8px;
+		    background-color: #2e2e2e;
+		    border-color: transparent;
+		    color: white;
+		    box-shadow: none;
+		    border: none;
+		}
+		.close-modal:hover{
+			background-color: #4e4e4e;
+			cursor:pointer;
+		}
+	</style>
+</body>
+</html>
