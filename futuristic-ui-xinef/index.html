@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Futuristic UI</title>
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+	<div class="header">
+		<h1>Asterion</h1>
+		<h2>- O <span>-</span> N <span>-</span> L <span>-</span> I <span>-</span> N <span>-</span> E -</h2>
+		<div class="wrapper visible" id="firstScene">
+			<button id="startButton">start</button>
+			<div class="table-wrapper" id="characterTable">
+				<table>
+					<thead>
+						<tr>
+							<th>N°</th>
+							<th>Name</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="aRow">
+							<td>1</td>
+							<td>Xinef Thar</td>
+							<td>Specialist Sniper</td>
+						</tr>
+						<tr class="aRow">
+							<td>2</td>
+							<td>Elia Thar</td>
+							<td>Mace Hunter</td>
+						</tr>
+						<tr class="aRow">
+							<td>3</td>
+							<td>Kharael Thar</td>
+							<td>Master of Thunder</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="wrapper" id="secondScene">
+			<p class="loading">Loading...</p>
+		</div>
+	</div>
+
+	<script>
+		//Scenes
+		var firstScene = document.getElementById("firstScene");
+		var secondScene = document.getElementById("secondScene");
+
+		//Elements
+		var button = document.getElementById("startButton");
+		var table = document.getElementById("characterTable");
+		var logo = document.getElementById("logoWrapper");
+
+
+		//Main Button Event Handling
+		button.addEventListener("click", function(e){
+			if(e.target.innerHTML == "start"){
+				table.classList.add("visible");
+				button.innerHTML = "load";	
+			}else if(e.target.innerHTML == "ready"){
+				firstScene.classList.remove("visible");
+				secondScene.classList.add("visible");
+			}else{
+				console.log("Errors in the spaceshipt engines...")
+			}
+		});
+
+		//Table Event Handlers
+		table.addEventListener("click", function(e){
+			if(e.target.parentElement.classList.contains("aRow")){
+				var allRows = document.querySelectorAll(".aRow");
+				console.log(allRows);
+				for (var i = allRows.length - 1; i >= 0; i--) {
+					console.log(i);
+					allRows[i].classList.remove("selected");
+				}
+				e.target.parentElement.classList.add("selected");
+				button.innerHTML = "ready";
+			}
+		});
+
+	</script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+/* Its online experiment - apsolut */
+
+body {
+ background:#000 url('https://s22.postimg.org/rwc2acgj5/image.jpg');
+}
+
+@font-face{
+	font-family: 'MarvinVisions';
+	src: url('fonts/MarvinVisions-Bold.eot'); /* IE9 Compat Modes */
+    src: url('fonts/MarvinVisions-Bold.woff2') format('woff2'), /* Super Modern Browsers */
+    	url('fonts/MarvinVisions-Bold.woff') format('woff'); /* Pretty Modern Browsers */
+}
+*{
+	box-sizing: border-box;
+}
+html,
+body{
+	margin: 0;
+	padding: 0;
+}
+div.header{
+	position: absolute;
+	top:0;
+	left:0;
+	display:inline-block;
+	width: 100%;
+	height: 1250px;
+	text-align: center;
+	/*background-color: rgba(5,5,5,1);*/
+}
+h1{
+	font-family: 'MarvinVisions';
+	color:antiquewhite;
+	font-size: 154px;
+	margin-bottom:0;
+}
+h2{
+	display: inline-block;
+	font-family: 'Helvetica';
+	font-size: 50px;
+	font-stretch: a;
+	color: aquamarine;
+	margin-top:-20px;
+	overflow: hidden;
+}
+h2 span{
+	display: inline-block;
+	width:25px;
+	color:transparent;
+}
+
+/* Wrapper or scenes */
+
+.wrapper{
+	transition: all 0.2s linear;
+	display:none;
+}
+.wrapper.visible{
+	display:block;
+}
+
+/* Button */
+button{
+	background-color: transparent;
+    border: 1px solid antiquewhite;
+    width: 100px;
+    height: 30px;
+    color: antiquewhite;
+    font-family: 'Helvetica';
+    letter-spacing: 5px;
+    text-align: center;
+    transition: all 0.2s linear;
+    border-radius: 3px;
+    text-transform: uppercase;
+}
+button:hover{
+	background-color: antiquewhite;
+	color:#060910;
+	cursor: pointer;
+}
+button:focus{
+	outline: none;
+}
+
+/*Table*/
+.table-wrapper{
+	transition: all 0.5s linear;
+	display:none;
+}
+.table-wrapper.visible{
+	display: block;
+}
+table{
+	border:1px solid antiquewhite;
+	border-radius: 3px;
+	border-collapse: collapse;
+	margin:40px auto;
+}
+tbody{
+	max-height: 50px;
+	overflow-y: scroll;
+}
+th{
+	border-bottom:1px solid antiquewhite;
+}
+th, td{
+	padding: 10px;
+	color: antiquewhite;
+	font-family: monospace;
+	text-align:left;
+	transition: all 0.2s linear;
+}
+tr.selected td,
+tr:hover td{
+	background-color: antiquewhite;
+	color:#060910;
+	cursor: pointer;
+}
+
+/*Loading*/
+p.loading{
+	color: antiquewhite;
+    font-family: 'Helvetica';
+    letter-spacing: 5px;
+    text-align: center;
+    transition: all 0.2s linear;
+    text-transform: uppercase;
+ }
