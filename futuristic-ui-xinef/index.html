@@ -7,10 +7,16 @@
 	<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-	<div class="header">
+	<div class="main">
 		<h1>Asterion</h1>
 		<h2>- O <span>-</span> N <span>-</span> L <span>-</span> I <span>-</span> N <span>-</span> E -</h2>
 		<div class="wrapper visible" id="firstScene">
+			<div class="alert" id="alertWarning">
+				<strong class="alert-title">¡PELIGRO!</strong>
+				<p class="alert-text">Estás entrando en una zona prohibida...</p>
+				<button class="alertButton" id="okAlert">OK</button>
+				<!-- <button class="alertButton" id="closeAlert">CANCELAR</button> -->
+			</div>
 			<button id="startButton">start</button>
 			<div class="table-wrapper" id="characterTable">
 				<table>
@@ -42,7 +48,48 @@
 			</div>
 		</div>
 		<div class="wrapper" id="secondScene">
-			<p class="loading">Loading...</p>
+			<p class="loading">Loading 
+				<span class="dot dot1">.</span>
+				<span class="dot dot2">.</span>
+				<span class="dot dot3">.</span>
+			</p>
+		</div>
+		<div class="wrapper" id="thirdScene">
+			<p class="loading">holi :D</p>
+			<div class="status-bars">
+				<div class="bar"><div class="bar-percentage" data-number="1"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="2"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="3"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="4"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="5"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="6"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="7"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="8"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="9"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="#"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="#"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="#"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="#"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="#"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="#"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="#"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="#"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="#"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="#"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="#"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="#"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="#"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="#"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="#"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="#"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="#"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="#"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="#"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="#"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="#"></div></div>
+				<div class="bar"><div class="bar-percentage" data-number="#"></div></div>
+
+			</div>
 		</div>
 	</div>
 
@@ -50,21 +97,35 @@
 		//Scenes
 		var firstScene = document.getElementById("firstScene");
 		var secondScene = document.getElementById("secondScene");
+		var thirdScene = document.getElementById("thirdScene");
 
-		//Elements
+		//First Scene Elements
 		var button = document.getElementById("startButton");
 		var table = document.getElementById("characterTable");
 		var logo = document.getElementById("logoWrapper");
+		var alertWarning = document.getElementById("alertWarning");
+		var okAlert = document.getElementById("okAlert");
+		var alertStillAvailable = true;
 
 
 		//Main Button Event Handling
 		button.addEventListener("click", function(e){
 			if(e.target.innerHTML == "start"){
-				table.classList.add("visible");
-				button.innerHTML = "load";	
+				if(alertStillAvailable){
+					showAlert();
+				}else{
+					table.classList.add("visible");
+					button.innerHTML = "load";	
+				}
+					
 			}else if(e.target.innerHTML == "ready"){
 				firstScene.classList.remove("visible");
 				secondScene.classList.add("visible");
+				setTimeout(function() {
+					secondScene.classList.remove("visible");
+					thirdScene.classList.add("visible");
+					excecuteThirdScene();
+				}, 1000);
 			}else{
 				console.log("Errors in the spaceshipt engines...")
 			}
@@ -83,6 +144,51 @@
 				button.innerHTML = "ready";
 			}
 		});
+
+		okAlert.addEventListener("click", function(e){
+			alertWarning.classList.remove("visible");
+		});
+
+
+		function showAlert(){
+			alertWarning.classList.add("visible");
+			alertStillAvailable = false;
+		}
+
+		function excecuteThirdScene(){
+			//Get Third Scene Elements
+			var bars = document.querySelectorAll(".bar-percentage");
+			console.log(bars);
+			// for (var i = bars.length - 1; i >= 0; i--) {
+			// 	var random = Math.round(Math.random() * 300);
+			// 	bars[i].style.height = random + "px";
+			// }
+			setTimeout(function() {
+				for (var j = bars.length - 1; j >= 0; j--) {
+					var random = Math.round(Math.random() * 300);
+					bars[j].style.height = random + "px";
+					bars[j].setAttribute('data-tooltip', "Data Title");
+					bars[j].setAttribute('data-height', random+"px");
+					bars[j].appendChild(createATooltip(random, "Data Title"));
+					if(random > 260){
+						bars[j].style.backgroundColor  = "lightblue";
+					}else if(random < 40){
+						bars[j].style.backgroundColor = "orangered";
+					}			
+				}	
+			}, 500);
+		}
+
+		function createATooltip(parentHeight, text){
+			var node = document.createElement("span");                 // Create a <li> node
+			var textnode = document.createTextNode(text);         // Create a text node
+			node.style.top = parentHeight+"px";
+			node.classList.add("bar-tooltip")
+			node.appendChild(textnode);                              // Append the text to <li>
+			return node;
+		}
+
+
 
 	</script>
 </body>
